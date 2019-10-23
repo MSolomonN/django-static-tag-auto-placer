@@ -15,5 +15,5 @@ Enter Assets folder. Example 'assets/' (leave blank if none): _______
 
 Enter html file location: _______
 
-A new file has been created 'new.html', copy and paste its contents. /n
+A new file has been created 'new.html', copy and paste its contents.
 
