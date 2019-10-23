@@ -17,8 +17,8 @@ python static.py
 
 # OUTPUT
 
-> Placing {% static 'assets/...' %}
+Placing {% static 'assets/...' %}
 
-> A new file has been created 'new.html', copy and paste its contents.
+A new file has been created 'new.html', copy and paste its contents.
 
 
