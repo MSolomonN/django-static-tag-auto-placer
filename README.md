@@ -9,14 +9,16 @@ python 3
 
 python static.py 
 
-# OUTPUT
+# INPUT 
 
 > Enter Assets folder. Example 'assets' (leave blank if none): assets
 
 > Enter html file location: /home/django/project/index.html
 
-Placing {% static 'assets/...' %}
+# OUTPUT
 
-A new file has been created 'new.html', copy and paste its contents.
+> Placing {% static 'assets/...' %}
+
+> A new file has been created 'new.html', copy and paste its contents.
 
 
