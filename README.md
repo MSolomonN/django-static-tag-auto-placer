@@ -7,12 +7,12 @@ python 3
 
 # USAGE
 
-python static.py
-
-$ Enter Assets folder. Example 'assets/' (leave blank if none):
-$ Enter html file location: 
+python static.py 
 
 # OUTPUT
+
+Enter Assets folder. Example 'assets/' (leave blank if none):  assets/
+Enter html file location: index.html
 
 A new file has been created 'new.html', copy and paste its contents.
 
