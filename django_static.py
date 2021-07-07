@@ -1,3 +1,11 @@
+def clean_location(loc):
+    loc = loc.replace('../', '')
+    
+    if loc.startswith('/'):
+        loc = loc[1:]
+        
+    return loc
+    
 def check_line(line, assets_folder):
     line_list = line.split(" ") # split the line into a list
     count = 0 # save the index of an object in the list
@@ -7,7 +15,8 @@ def check_line(line, assets_folder):
       if obj.startswith("href") or obj.startswith("src"): # change only if it is src or href
         another_list = obj.split('"') # split the section again into a list to get the plain text inside quotes
         loc = another_list[1]
-        if loc is not '#' and loc.endswith(".html") == False and loc.startswith("http") == False: # avoid # and .html
+        if loc != '#' and loc.endswith(".html") == False and loc.startswith("http") == False: # avoid # and .html
+          loc = clean_location(loc)
           header = "{! static '%s%s' !}" % (assets_folder,loc)
           header = header.replace('!', '%')
           another_list[1] = header
@@ -30,6 +39,9 @@ def main():
   file = open(edit_file, 'r')
 
   final_html = []
+  if assets_folder == "/":
+    assets_folder = ""
+  
   print(("\nPlacing {! static '%s...' !}" % assets_folder).replace('!', '%'))
   for line in file.readlines():
     l = check_line(line, assets_folder)
@@ -43,7 +55,11 @@ def main():
   file2.close()
   print("\nA new file has been created '%s', copy and paste its contents." % new_file)
 
+"""
 try:
   main()
-except:
+except Exception as e:
+  print(e)
   print("\nAn error has occured! Make sure the html file location is correct.")
+"""
+main()
