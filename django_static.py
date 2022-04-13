@@ -1,65 +1,66 @@
-def clean_location(loc):
-    loc = loc.replace('../', '')
+def clean_value(value):
+    value = value.replace('../', '')     
+    return value
     
-    if loc.startswith('/'):
-        loc = loc[1:]
+def edit_line(line, assets_folder):
+    # split the line into a list and loop through 
+    # to find src and href tags for editing 
+    line_list = line.split() 
+
+    for count in range(0, len(line_list)):
+        section = line_list[count]
+
+        # change section only if it has src or href
+        if not section.startswith('href') and not section.startswith('src'): continue
         
-    return loc
-    
-def check_line(line, assets_folder):
-    line_list = line.split(" ") # split the line into a list
-    count = 0 # save the index of an object in the list
+        # get the value inside the quotes
+        section_list = section.split('"') 
+        value = section_list[1]
 
-    # for each object in the list analyze it and change it if neccessary
-    for obj in line_list:
-      if obj.startswith("href") or obj.startswith("src"): # change only if it is src or href
-        another_list = obj.split('"') # split the section again into a list to get the plain text inside quotes
-        loc = another_list[1]
-        if loc != '#' and loc.endswith(".html") == False and loc.startswith("http") == False: # avoid # and .html
-          loc = clean_location(loc)
-          header = "{! static '%s%s' !}" % (assets_folder,loc)
-          header = header.replace('!', '%')
-          another_list[1] = header
-          line_list[count] = ('"').join(another_list) # after replacing content join the list
-      count += 1
+        if value.startswith('#'): continue
+        if value.endswith('.html'): continue
+        if value.startswith('http'): continue
+        if value.startswith('javascript'): continue
+        
+        # insert the value in our static tags
+        value = clean_value(value)
+        tag = "{! static '%s/%s' !}" % (assets_folder, value)
+        tag = tag.replace('!', '%')
 
-    line = (" ").join(line_list) # join the line
-    return line # return edited line
+        # replace the section of the line with our new content
+        section_list[1] = tag
+        line_list[count] = ('"').join(section_list)
+        
+        print('Changed to', line_list[count])
+
+    return (" ").join(line_list)
 
 def main():
-  assets_folder = input("> Enter assets folder. Example 'assets' (leave blank if none): ")
-  # make sure assets_folder is correct
-  if assets_folder.startswith('/'):
+    assets_folder = input("> Enter assets folder. Example 'assets' (leave blank if none): ")
+    source_file = input("> Enter html file path: ") 
+
+    # clean assets folder
+    assets_folder.replace(' ', '')                  
     assets_folder = assets_folder.replace('/', '')     
-  if assets_folder.endswith('/') == False:
-    assets_folder = "%s/" % assets_folder
-  assets_folder.replace(' ', '') # important to remove added spaces
+    print("\n\nmaking changes...\n\n")
+    
+    # read source file
+    file = open(source_file, 'r', encoding='utf8')
+    edited_html = ['{% load static %}']
+    
+    for line in file.read().split('\n'):
+        nwline = edit_line(line, assets_folder)
+        edited_html.append(nwline)
 
-  edit_file = input("> Enter html file location: ") # html file location
-  file = open(edit_file, 'r')
+    file.close()
 
-  final_html = []
-  if assets_folder == "/":
-    assets_folder = ""
-  
-  print(("\nPlacing {! static '%s...' !}" % assets_folder).replace('!', '%'))
-  for line in file.readlines():
-    l = check_line(line, assets_folder)
-    final_html.append(l) # append edited line
+    # write new file
+    new_file = 'new.html'
+    file = open(new_file, 'w', encoding='utf8')
+    file.write(('\n').join(edited_html))
+    file.close()
 
-  # write a new file
-  new_file = 'new.html'
-  file2 = open(new_file, 'w')
-  new_html = ("").join(final_html)
-  file2.write(new_html)
-  file2.close()
-  print("\nA new file has been created '%s', copy and paste its contents." % new_file)
+    print("\n\nA new file has been created '%s', copy and paste its contents." % new_file)
 
-"""
-try:
-  main()
-except Exception as e:
-  print(e)
-  print("\nAn error has occured! Make sure the html file location is correct.")
-"""
-main()
+if __name__ == "__main__":
+    main()
