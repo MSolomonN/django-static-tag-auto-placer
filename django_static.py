@@ -1,5 +1,6 @@
 def clean_value(value):
     value = value.replace('../', '')     
+    value = value.replace('./', '')
     return value
     
 def edit_line(line, assets_folder):
