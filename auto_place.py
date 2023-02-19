@@ -25,7 +25,7 @@ def clean_src(src):
         return src
                 
 def get_static_url(src, assets_folder):
-    if assets_folder: src = '{assets_folder}/{src}'
+    if assets_folder: src = f'{assets_folder}/{src}'
 
     static_url = f"<% static '{src}' %>"
     static_url = static_url.replace('<', '{')
