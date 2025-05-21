@@ -12,12 +12,21 @@ def write_file(soup, new_file):
     file.close()
 
 def clean_src(src):
-    if not src or src.startswith('http'):
+    if not src:
         return None
-
+    
+    elif src.startswith('http'):
+        return None
+    
+    elif 'data:image' in src:
+        return None
+    
     elif src.startswith('./'):
         return src.replace('./', '', 1)
 
+    elif src.startswith('../'):
+        return src.replace('../', '', 1)
+    
     elif src.startswith('/'):
         return src.replace('/', '', 1)
 
